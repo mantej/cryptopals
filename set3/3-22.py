@@ -2,16 +2,30 @@
 Crack an MT19937 seed
 """
 
-import twister
+from twister import Twister
+import time
+import random
 
-# Given the first 32 bit output, returns the seed value
-def reverse_twister(out):
-	out ^= (out >> 18)
-	out ^= ((out << 15) & 0xefc60000)
-	out ^= ((out << 7) & 0x9d2c5680)
-	out ^= (out >> 11)
-	return out
+# key = first 32-bit output
+# value = seed (timestamp)
+seeds = {}
 
-twister.initialize_generator(12345)
+def crack_seed(output):
+	current_timestamp = int(time.time())
+	for i in range(current_timestamp-2001, current_timestamp):
+		twister.initialize_generator(i)
+		out = twister.extract_number()
+		seeds[out] = i
+	print "Guessed seed:", seeds[output]
+
+time.sleep(random.randint(40, 1000))
+
+timestamp = int(time.time())
+print "Actual seed: ", timestamp
+
+time.sleep(random.randint(40, 1000))
+
+twister = Twister()
+twister.initialize_generator(timestamp)
 first_32bit_output = twister.extract_number()
-print reverse_twister(first_32bit_output)
+crack_seed(first_32bit_output)
