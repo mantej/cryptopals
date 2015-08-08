@@ -40,15 +40,14 @@ def parse(encoded_profile):
 key = os.urandom(16).encode('hex')
 
 attack1 = encrypt_ecb(profile_for("msr@gmail.com").encode('hex'), key)
-# first two 16-byte blocks are 
-# e84bde42218d6ea0bafa86691a94df9b3194d86aea5f6b840291c427ea143c0c
 
 # first 16 bytes are "email=AAAAAAAAAA"
 # "admin" is then at the beginning of the 2nd block
 attack2 = encrypt_ecb(profile_for("AAAAAAAAAAadmin").encode('hex'), key)
-# second 16-byte block is
-# 35bb84422e94ead4c61b6b31229841e7
 
-combined_blocks = "e84bde42218d6ea0bafa86691a94df9b3194d86aea5f6b840291c427ea143c0c"+"35bb84422e94ead4c61b6b31229841e7"
+# combine first two blocks of 1st ciphertext with second block of 2nd ciphertext
+combined_blocks = attack1[:64] + attack2[32:64]
+
 decrypted_encoded_profile = decrypt_ecb(combined_blocks, key).decode('hex')
 parse(decrypted_encoded_profile)
+

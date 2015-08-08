@@ -1,4 +1,4 @@
 # matasano-crypto-challenges
 Crypto Challenges by Matasano
 
-As of May 2015, I'm working on set 3. 
+As of August 2015, I'm working on set 4. 
