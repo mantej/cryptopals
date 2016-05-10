@@ -1,6 +1,7 @@
 """
 Implement CBC mode
 """
+
 from Crypto.Cipher import AES
 
 # Returns bitwise XOR of two hex strings

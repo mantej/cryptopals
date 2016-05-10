@@ -2,8 +2,7 @@
 Break fixed-nonce CTR mode using substitions
 """
 
-from Crypto.Cipher import AES
-from struct import *
+from ctr import CTR
 import os
 
 plaintexts = [
@@ -70,58 +69,11 @@ def xor(hex1, hex2):
     return xor_hex
 
 
-# plaintext is hex-encoded
-# key is ascii
-def ctr_encrypt(plaintext, key, nonce=0):
-    aes = AES.new(key, AES.MODE_ECB)
-    encrypted = ""
-    ctr = nonce
-    keystream = aes.encrypt(pack("<Q",0)+pack("<Q", ctr))
-
-    # while there is more than '1 block' left (16 bytes = 32 hex characters)
-    while len(plaintext) >= 32:
-        encrypted += xor(plaintext[:32], keystream.encode('hex'))
-        plaintext = plaintext[32:]
-        ctr = ctr+1
-        keystream = aes.encrypt(pack("<Q",0)+pack("<Q", ctr))
-
-    if len(plaintext) != 0:
-        leftover_length = len(plaintext)/2
-        keystream = keystream[0:leftover_length]
-        encrypted += xor(plaintext[:leftover_length*2], keystream.encode('hex'))
-
-    # returns hex-encoded ciphertext
-    return encrypted
-
-
-# ciphertext is hex-encoded
-# key is ascii
-def ctr_decrypt(ciphertext, key, nonce=0):
-    aes = AES.new(key, AES.MODE_ECB)
-    decrypted = ""
-    ctr = nonce
-    keystream = aes.encrypt(pack("<Q",0)+pack("<Q", ctr))
-
-    # while there is more than '1 block' left (16 bytes = 32 hex characters)
-    while len(ciphertext) >= 32:
-        decrypted += xor(ciphertext[:32], keystream.encode('hex')).decode('hex')
-        ciphertext = ciphertext[32:]
-        ctr = ctr+1
-        keystream = aes.encrypt(pack("<Q",0)+pack("<Q", ctr))
-
-    if len(ciphertext) != 0:
-        leftover_length = len(ciphertext)/2
-        keystream = keystream[0:leftover_length]
-        decrypted += xor(ciphertext[:leftover_length*2], keystream.encode('hex')).decode('hex')
-
-    # returns decrypted plaintext in ascii
-    return decrypted
-
-
 key = os.urandom(16)
+ctr = CTR(key)
 
 # all the plaintexts encrypted under the same key with nonce fixed to 0
-ciphertexts = [ctr_encrypt(p.decode('base64').encode('hex'), key) for p in plaintexts]
+ciphertexts = [ctr.ctr_encrypt(p.decode('base64').encode('hex')) for p in plaintexts]
 
 
 # "I have" was the most reasonable

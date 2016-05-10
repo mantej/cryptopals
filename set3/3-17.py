@@ -2,7 +2,7 @@
 The CBC padding oracle
 """
 
-from Crypto.Cipher import AES
+from cbc import CBC
 import os
 import random
 
@@ -20,6 +20,7 @@ messages = [
 "MDAwMDA5aXRoIG15IHJhZy10b3AgZG93biBzbyBteSBoYWlyIGNhbiBibG93"
 ]
 
+
 # Returns bitwise XOR of two hex strings
 def xor(hex1, hex2):
     length = len(hex1)
@@ -33,88 +34,6 @@ def xor(hex1, hex2):
     while (len(xor_hex) < length):
         xor_hex = "0" + xor_hex
     return xor_hex
-
-
-# ciphertext is hex-encoded
-# key is ASCII 
-def cbc_decrypt(ciphertext, key, IV="00000000000000000000000000000000", bSize=16, mode=AES.MODE_ECB):
-    pad = (len(ciphertext) % (bSize*2)) / 2
-    if pad != 0:
-        print "[*] WARNING: Last block of ciphertext needs to be padded by %s byte(s)!" % pad
-        exit(0)
-    # blocks contains the ciphertext split into bSize-byte blocks, hex-encoded
-    blocks = []
-    for i in range(0, int(len(ciphertext) / (bSize*2))):
-        block = ciphertext[i*(bSize*2):(i*(bSize*2))+(bSize*2)]
-        blocks.append(block)
-    # Create new AES object
-    aes = AES.new(key, mode)
-    decrypted = ""
-    for i in range(0, len(blocks)):
-        block = blocks[i]
-        decrypted_block = aes.decrypt(block.decode('hex'))
-        if i == 0:
-            decrypted_block = xor(decrypted_block.encode('hex'), IV)
-            decrypted += decrypted_block.decode('hex')
-        else:
-            decrypted_block = xor(decrypted_block.encode('hex'), blocks[i-1])
-            decrypted += decrypted_block.decode('hex')
-    # Returns decrypted plaintext in ASCII
-    return decrypted
-
-
-
-# plaintext is hex-encoded
-# key is ASCII 
-def cbc_encrypt(plaintext, key, IV="00000000000000000000000000000000", bSize=16, mode=AES.MODE_ECB):
-    # Pad the plaintext before encrypting
-    plaintext = PKCS(plaintext, bSize)
-    # blocks contains the plaintext split into bSize-byte blocks, hex-encoded
-    blocks = []
-    for i in range(0, int(len(plaintext) / (bSize*2))):
-        block = plaintext[i*(bSize*2):(i*(bSize*2))+(bSize*2)]
-        blocks.append(block)
-    # Create new AES object
-    aes = AES.new(key, mode)
-    ciphertext = []
-    for i in range(0, len(blocks)):
-        block = blocks[i]
-        if i == 0:
-            block_to_encrypt = xor(block, IV)
-        else:   
-            block_to_encrypt = xor(block, ciphertext[i-1])
-        ciphertext.append(aes.encrypt(block_to_encrypt.decode('hex')).encode('hex'))
-    # Returns hex-encoded ciphertext
-    return ''.join([c for c in ciphertext])
-
-
-hex_values = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f", "00"]
-# plaintext is hex-encoded
-# Pads plaintext to bSize bytes
-def PKCS(plaintext, bSize):
-    num_pad = len(plaintext.decode('hex')) % bSize
-    plaintext += hex_values[bSize-(num_pad+1)]*(bSize-num_pad)
-    return plaintext
-
-
-# determines if plaintext has valid PKCS#7 padding, and strips the padding off.
-# plaintext is hex-encoded
-# FIXED -- UPDATE IN EARLIER SOLUTIONS
-def PKCS_validate(plaintext):
-    padding_values = [hex_values[-1]] + hex_values[:-1]
-    if len(plaintext) % 32 != 0:
-        return False
-    if plaintext[-2:] not in padding_values:
-        return False
-    pad = padding_values.index(plaintext[-2:])
-    if pad == 0 and plaintext[-32:] != ("00"*16):
-        return False
-    for i in range(0, pad):
-        byte = plaintext[-2:]
-        plaintext = plaintext[:-2]
-        if byte != padding_values[pad]:
-            return False
-    return True
 
 
 # performs a CBC padding oracle attack against ciphertext
@@ -163,7 +82,7 @@ def cbc_padding_attack(ciphertext):
 
     return decrypted_plaintext
 
-
+hex_values = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f", "00"]
 # sets up padding for attack on a byte
 # e.g. if targeting 3rd-to-last byte, will change our ciphertext block such that
 # ciphertext_byte = 03 XOR intermediate byte (which we found previously)
@@ -184,6 +103,7 @@ def setup_block_for_next_attack(index, ciphertext, intermediate_block, pad_targe
 # targets one byte of the ciphertext, incrementing it until padding is valid
 # returns intermediate byte
 def attack_next_byte(ciphertext, byte_index, pad_target, og_byte):
+    global cbc
     for num in range(0,256):
         h = hex(num)[2:]
         if len(h) == 1:
@@ -191,7 +111,7 @@ def attack_next_byte(ciphertext, byte_index, pad_target, og_byte):
         if h == og_byte:
             continue
         ciphertext = ciphertext[0:byte_index] + h + ciphertext[byte_index+2:]
-        if validate(ciphertext):
+        if cbc.validate(ciphertext):
             #print "The value of my fake byte: ", h
             #print "Last byte of intermediate ciphertext: ", xor(h, hex_values[pad_target])
             return xor(h, hex_values[pad_target])
@@ -200,28 +120,19 @@ def attack_next_byte(ciphertext, byte_index, pad_target, og_byte):
     return xor(og_byte, hex_values[pad_target])
 
 
-# ciphertext is hex-encoded
-# key is ASCII
-# returns true if the ciphertext decrypts to a plaintext with valid PKCS padding
-def validate(ciphertext):
-    global key
-    plaintext = cbc_decrypt(ciphertext, key)
-    return PKCS_validate(plaintext.encode('hex'))
-
 
 # chooses a random message from those above, and encrypts it with CBC
-# iv is hex-encoded
 # returns hex-encoded ciphertext
-def setup(iv):
-    global key
-    key = os.urandom(16)
+def setup():
+    global cbc
     plaintext = (random.choice(messages)).decode('base64').encode('hex')
-    ciphertext = cbc_encrypt(plaintext, key, iv)
+    ciphertext = cbc.cbc_encrypt(plaintext)
     return ciphertext
 
 
-key = None
+key = key = os.urandom(16)
 iv = os.urandom(16).encode('hex')
-ciphertext = setup(iv)
+cbc = CBC(key, iv)
+ciphertext = setup()
 decrypted_plaintext = cbc_padding_attack(iv+ciphertext)
 print decrypted_plaintext

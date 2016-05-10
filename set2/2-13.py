@@ -1,6 +1,7 @@
 """
 ECB cut-and-paste
 """
+
 from Crypto.Cipher import AES
 import os
 from random import randint
