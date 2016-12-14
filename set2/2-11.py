@@ -89,21 +89,18 @@ Play that funky music".encode('hex')
 
 # Returns bitwise XOR of two hex strings
 def xor(hex1, hex2):
-    length = len(hex1)
     if len(hex1) != len(hex2):
         print "[*] Hexadecimal strings are not of the same length."
-        return False
-    int1 = int(hex1, 16)
-    int2 = int(hex2, 16)
+        exit(0)
+    int1, int2 = int(hex1, 16), int(hex2, 16)
     xor_hex = hex(int1 ^ int2)[2:-1]
     # Appends leading zeros to maintain original length
-    while (len(xor_hex) < length):
-        xor_hex = "0" + xor_hex
+    xor_hex = "0"*(len(hex1) - len(xor_hex)) + xor_hex
     return xor_hex
 
 
 # Ciphertext is hex-encoded
-# Key is ASCII 
+# Key is ASCII
 def cbc_decrypt(ciphertext, key, IV="00000000000000000000000000000000", bSize=16, mode=AES.MODE_ECB):
     pad = (len(ciphertext) % (bSize*2)) / 2
     if pad != 0:
@@ -132,7 +129,7 @@ def cbc_decrypt(ciphertext, key, IV="00000000000000000000000000000000", bSize=16
 
 hex_values = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f"]
 # Plaintext is hex-encoded
-# Key is ASCII 
+# Key is ASCII
 def cbc_encrypt(plaintext, key, IV="00000000000000000000000000000000", bSize=16, mode=AES.MODE_ECB):
     # Pad the plaintext before encrypting
     plaintext = PKCS(plaintext, bSize)
@@ -152,7 +149,7 @@ def cbc_encrypt(plaintext, key, IV="00000000000000000000000000000000", bSize=16,
             block_to_encrypt = xor(block, ciphertext[i-1])
         ciphertext.append(aes.encrypt(block_to_encrypt.decode('hex')).encode('hex'))
     # Returns ciphertext
-    #return 
+    #return
     return ''.join([c for c in ciphertext])
 
 
@@ -170,7 +167,7 @@ def random_encrypt(plaintext, key):
     r1 = randint(5,10)
     r2 = randint(5,10)
     plaintext = os.urandom(r1).encode('hex') + plaintext + os.urandom(r2).encode('hex')
-    
+
     choice = randint(0,1)
     if choice == 0:
         print "Encrypting with ECB..."
@@ -182,7 +179,7 @@ def random_encrypt(plaintext, key):
     else:
         print "Encrypting with CBC..."
         ciphertext = cbc_encrypt(plaintext, key, os.urandom(16).encode('hex'))
-    
+
     # hex-encoded ciphertext
     return ciphertext
 
@@ -196,7 +193,7 @@ def detection_oracle(ciphertext, bSize=16):
         print "ECB-encrypted ciphertext detected."
     else:
         print "CBC-encrypted ciphertext detected"
-    
+
 
 #######################################################################
 
@@ -207,11 +204,3 @@ detection_oracle(ciphertext)
 #ciphertext = cbc_encrypt(plaintext, key)
 #plaintext = cbc_decrypt(ciphertext, key)
 #print plaintext
-
-
-
-
-
-
-
-

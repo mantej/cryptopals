@@ -8,21 +8,18 @@ from random import randint
 
 # Returns bitwise XOR of two hex strings
 def xor(hex1, hex2):
-    length = len(hex1)
     if len(hex1) != len(hex2):
         print "[*] Hexadecimal strings are not of the same length."
-        return False
-    int1 = int(hex1, 16)
-    int2 = int(hex2, 16)
+        exit(0)
+    int1, int2 = int(hex1, 16), int(hex2, 16)
     xor_hex = hex(int1 ^ int2)[2:-1]
     # Appends leading zeros to maintain original length
-    while (len(xor_hex) < length):
-        xor_hex = "0" + xor_hex
+    xor_hex = "0"*(len(hex1) - len(xor_hex)) + xor_hex
     return xor_hex
 
 
 # ciphertext is hex-encoded
-# key is ASCII 
+# key is ASCII
 def cbc_decrypt(ciphertext, key, IV="00000000000000000000000000000000", bSize=16, mode=AES.MODE_ECB):
     pad = (len(ciphertext) % (bSize*2)) / 2
     if pad != 0:
@@ -52,7 +49,7 @@ def cbc_decrypt(ciphertext, key, IV="00000000000000000000000000000000", bSize=16
 
 hex_values = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f", "00"]
 # plaintext is hex-encoded
-# key is ASCII 
+# key is ASCII
 def cbc_encrypt(plaintext, key, IV="00000000000000000000000000000000", bSize=16, mode=AES.MODE_ECB):
     # Pad the plaintext before encrypting
     plaintext = PKCS(plaintext, bSize)
@@ -68,7 +65,7 @@ def cbc_encrypt(plaintext, key, IV="00000000000000000000000000000000", bSize=16,
         block = blocks[i]
         if i == 0:
             block_to_encrypt = xor(block, IV)
-        else:   
+        else:
             block_to_encrypt = xor(block, ciphertext[i-1])
         ciphertext.append(aes.encrypt(block_to_encrypt.decode('hex')).encode('hex'))
     # Returns ciphertext

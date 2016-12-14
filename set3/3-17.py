@@ -20,19 +20,15 @@ messages = [
 "MDAwMDA5aXRoIG15IHJhZy10b3AgZG93biBzbyBteSBoYWlyIGNhbiBibG93"
 ]
 
-
 # Returns bitwise XOR of two hex strings
 def xor(hex1, hex2):
-    length = len(hex1)
     if len(hex1) != len(hex2):
         print "[*] Hexadecimal strings are not of the same length."
-        return False
-    int1 = int(hex1, 16)
-    int2 = int(hex2, 16)
+        exit(0)
+    int1, int2 = int(hex1, 16), int(hex2, 16)
     xor_hex = (hex(int1 ^ int2)[2:]).translate(None, "L")
     # Appends leading zeros to maintain original length
-    while (len(xor_hex) < length):
-        xor_hex = "0" + xor_hex
+    xor_hex = "0"*(len(hex1) - len(xor_hex)) + xor_hex
     return xor_hex
 
 
@@ -54,7 +50,7 @@ def cbc_padding_attack(ciphertext):
     intermediate_block = []
     intermediate_byte = attack_next_byte(ciphertext, byte_index, pad_target, og_byte)
     intermediate_block = [intermediate_byte] + intermediate_block
-    
+
     decrypted_plaintext = ""
     while len(ciphertext) > 32:
         ciphertext = setup_block_for_next_attack(index, ciphertext, intermediate_block, pad_target)

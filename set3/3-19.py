@@ -56,16 +56,11 @@ def xor(hex1, hex2):
         # if strings are not of the same length,
         # the longer string is truncated
         shorter = min(len(hex1), len(hex2))
-        hex1 = hex1[:shorter]
-        hex2 = hex2[:shorter]
-        #print "[*] Hexadecimal strings are not of the same length."
-        #exit(0)
-    int1 = int(hex1, 16)
-    int2 = int(hex2, 16)
+        hex1, hex2 = hex1[:shorter], hex2[:shorter]
+    int1, int2 = int(hex1, 16), int(hex2, 16)
     xor_hex = (hex(int1 ^ int2)[2:]).translate(None, "L")
     # Appends leading zeros to maintain original length
-    while (len(xor_hex) < length):
-        xor_hex = "0" + xor_hex
+    xor_hex = "0"*(len(hex1) - len(xor_hex)) + xor_hex
     return xor_hex
 
 

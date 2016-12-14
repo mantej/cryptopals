@@ -18,16 +18,13 @@ def generate_repeating_xor_key(key, length):
 
 # Returns bitwise XOR of two hex strings
 def xor(hex1, hex2):
-    length = len(hex1)
     if len(hex1) != len(hex2):
         print "[*] Hexadecimal strings are not of the same length."
-        return False
-    int1 = int(hex1, 16)
-    int2 = int(hex2, 16)
+        exit(0)
+    int1, int2 = int(hex1, 16), int(hex2, 16)
     xor_hex = hex(int1 ^ int2)[2:-1]
     # Appends leading zeros to maintain original length
-    while (len(xor_hex) < length):
-        xor_hex = "0" + xor_hex
+    xor_hex = "0"*(len(hex1) - len(xor_hex)) + xor_hex
     return xor_hex
 
 # Takes a hex string as input and scores it based on how many characters it uses from the English language
@@ -46,7 +43,7 @@ def score(str):
         # Space
         elif ord(char) == 32:
             score += 1
-    # Return a percentage between 0.0 and 1.0        
+    # Return a percentage between 0.0 and 1.0
     return float(score) / length
 
 # Returns the hamming distance between two hex strings
@@ -55,16 +52,16 @@ def hamming_distance(hex1, hex2):
     binary = bin(int(differing_bits, 16))[2:]
     return binary.count('1')
 
-    
+
 #str1 = "this is a test".encode('hex')
 #str2 = "wokka wokka!!!".encode('hex')
 #print hamming_distance(str1, str2)
 
-# open file with base64-encoded ciphertext 
+# open file with base64-encoded ciphertext
 with open("1-6.txt") as file:
     lines = file.readlines()
 
-# ciphertext is now the hex-encoded ciphertext  
+# ciphertext is now the hex-encoded ciphertext
 lines = [l.strip("\n") for l in lines]
 ciphertext = ''.join(lines)
 ciphertext = ciphertext.decode('base64').encode('hex')
@@ -84,7 +81,7 @@ for ksize in range(14, 40):
     if hamming < shortest_hamming:
         shortest_hamming = hamming
         keysize = ksize
-"""    
+"""
 keysize = 29
 
 #print ciphertext
@@ -101,7 +98,7 @@ for i in range(0, 1+len(ciphertext)/bytes):
 transposed = []
 for k in range(0, keysize):
     transposed.append("")
-    
+
 for block in blocks:
     for i in range(0, keysize):
         transposed[i] += block[(i*2):((i*2)+2)]
@@ -113,13 +110,9 @@ for k in range(0, keysize):
         decrypted = xor(transposed[k], pad)
         if score(decrypted) > 0.8:
             print "%s: %s" % (k, pad[0:2])
-"""            
-            
+"""
+
 key = "5465726d696e61746f7220583a204272696e6720746865206e6f697365"
 pad = generate_repeating_xor_key(key.decode('hex'), len(ciphertext))
 plaintext = xor(ciphertext, pad)
 print plaintext.decode('hex')
-
-
-
-            

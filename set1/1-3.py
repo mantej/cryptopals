@@ -11,16 +11,13 @@ def generate_pad(num, length):
 
 # Returns bitwise XOR of two hex strings
 def xor(hex1, hex2):
-    length = len(hex1)
     if len(hex1) != len(hex2):
         print "[*] Hexadecimal strings are not of the same length."
-        return False
-    int1 = int(hex1, 16)
-    int2 = int(hex2, 16)
+        exit(0)
+    int1, int2 = int(hex1, 16), int(hex2, 16)
     xor_hex = hex(int1 ^ int2)[2:-1]
     # Appends leading zeros to maintain original length
-    while (len(xor_hex) < length):
-        xor_hex = "0" + xor_hex
+    xor_hex = "0"*(len(hex1) - len(xor_hex)) + xor_hex
     return xor_hex
 
 # Takes a hex string as input and scores it based on how many characters it uses from the English language
@@ -39,10 +36,10 @@ def score(str):
         # Space
         elif ord(char) == 32:
             score += 1
-    # Return a percentage between 0.0 and 1.0        
+    # Return a percentage between 0.0 and 1.0
     return float(score) / length
-    
-    
+
+
 
 hex_string = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 length = len(hex_string)
@@ -53,4 +50,3 @@ for i in range(0, 256):
     if score(decrypt) > 0.9:
         print decrypt.decode('hex')
         print "Score: ", score(decrypt)
-    

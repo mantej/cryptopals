@@ -39,8 +39,3 @@ for i in range(len(ciphertext)/2):
             break
 
 print recovered_plaintext
-
-
-
-
-
