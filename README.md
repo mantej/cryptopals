@@ -1,4 +1,4 @@
 # matasano-crypto-challenges
-Crypto Challenges by Matasano
+Matasano Crypto Challenges (http://cryptopals.com)
 
-As of August 2015, I'm working on set 4. 
+As of December 2016, I'm working on set 4.
