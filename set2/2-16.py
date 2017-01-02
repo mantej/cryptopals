@@ -7,6 +7,8 @@ import os
 from random import randint
 
 # Returns bitwise XOR of two hex strings
+# INPUT:  2 hexadecimal strings of the same length
+# OUTPUT: 1 hexadecimal string
 def xor(hex1, hex2):
     if len(hex1) != len(hex2):
         print "[*] Hexadecimal strings are not of the same length."
@@ -18,8 +20,8 @@ def xor(hex1, hex2):
     return xor_hex
 
 
-# ciphertext is hex-encoded
-# key is ASCII
+# INPUT:  Hex-encoded Ciphertext. ASCII Key.
+# OUTPUT: ASCII Plaintext
 def cbc_decrypt(ciphertext, key, IV="00000000000000000000000000000000", bSize=16, mode=AES.MODE_ECB):
     pad = (len(ciphertext) % (bSize*2)) / 2
     if pad != 0:
@@ -48,8 +50,8 @@ def cbc_decrypt(ciphertext, key, IV="00000000000000000000000000000000", bSize=16
 
 
 hex_values = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f", "00"]
-# plaintext is hex-encoded
-# key is ASCII
+# INPUT:  Hex-encoded Plaintext. ASCII Key.
+# OUTPUT: Hex-encoded Ciphertext
 def cbc_encrypt(plaintext, key, IV="00000000000000000000000000000000", bSize=16, mode=AES.MODE_ECB):
     # Pad the plaintext before encrypting
     plaintext = PKCS(plaintext, bSize)

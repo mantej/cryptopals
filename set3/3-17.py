@@ -21,6 +21,8 @@ messages = [
 ]
 
 # Returns bitwise XOR of two hex strings
+# INPUT:  2 hexadecimal strings of the same length
+# OUTPUT: 1 hexadecimal string
 def xor(hex1, hex2):
     if len(hex1) != len(hex2):
         print "[*] Hexadecimal strings are not of the same length."

@@ -51,4 +51,3 @@ combined_blocks = attack1[:64] + attack2[32:64]
 
 decrypted_encoded_profile = decrypt_ecb(combined_blocks, key).decode('hex')
 parse(decrypted_encoded_profile)
-

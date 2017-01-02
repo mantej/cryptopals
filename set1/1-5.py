@@ -3,6 +3,8 @@ Implement repeating-key XOR
 """
 
 # Creates a repeating key of size length (in hex)
+# INPUT:  Key in ASCII. Length of the desired hexadecimal key
+# OUTPUT: Key in hexadecimal
 def generate_repeating_xor_key(key, length):
     key *= length / (2*len(key))
     diff = (length/2) - len(key)
@@ -10,6 +12,8 @@ def generate_repeating_xor_key(key, length):
     return key.encode('hex')
 
 # Returns bitwise XOR of two hex strings
+# INPUT:  2 hexadecimal strings of the same length
+# OUTPUT: 1 hexadecimal string
 def xor(hex1, hex2):
     if len(hex1) != len(hex2):
         print "[*] Hexadecimal strings are not of the same length."

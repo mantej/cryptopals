@@ -8,7 +8,8 @@ class CBC:
 		self.mode = AES.MODE_ECB
 
 
-	# ciphertext is hex-encoded
+	# INPUT:  Hex-encoded Ciphertext
+	# OUTPUT: ASCII Plaintext
 	def cbc_decrypt(self, ciphertext):
 	    pad = (len(ciphertext) % (self.bSize*2)) / 2
 	    if pad != 0:
@@ -35,7 +36,8 @@ class CBC:
 	    return decrypted
 
 
-	# plaintext is hex-encoded
+	# INPUT:  Hex-encoded Plaintext
+	# OUTPUT: Hex-encoded Ciphertext
 	def cbc_encrypt(self, plaintext):
 	    # Pad the plaintext before encrypting
 	    plaintext = self.PKCS(plaintext)
@@ -59,6 +61,8 @@ class CBC:
 
 
 	# Returns bitwise XOR of two hex strings
+	# INPUT:  2 hexadecimal strings of the same length
+	# OUTPUT: 1 hexadecimal string
 	def xor(self, hex1, hex2):
 	    if len(hex1) != len(hex2):
 	        print "[*] Hexadecimal strings are not of the same length."
@@ -78,9 +82,9 @@ class CBC:
 	    return plaintext
 
 
-	# determines if plaintext has valid PKCS#7 padding, and strips the padding off.
+	# FIXED
+	# determines if plaintext has valid PKCS#7 padding
 	# plaintext is hex-encoded
-	# FIXED -- UPDATE IN EARLIER SOLUTIONS
 	def PKCS_validate(self, plaintext):
 	    padding_values = [CBC.hex_values[-1]] + CBC.hex_values[:-1]
 	    if len(plaintext) % 32 != 0:

@@ -7,7 +7,8 @@ class CTR:
         self.nonce = nonce
         self.mode = AES.MODE_ECB
 
-    # ciphertext is hex-encoded
+    # INPUT:  Hex-encoded Ciphertext
+	# OUTPUT: ASCII Plaintext
     def ctr_decrypt(self, ciphertext):
         aes = AES.new(self.key, self.mode)
         decrypted = ""
@@ -29,7 +30,8 @@ class CTR:
         # returns decrypted plaintext in ASCII
         return decrypted
 
-    # plaintext is hex-encoded
+    # INPUT:  Hex-encoded Plaintext
+	# OUTPUT: Hex-encoded Ciphertext
     def ctr_encrypt(self, plaintext):
         aes = AES.new(self.key, self.mode)
         encrypted = ""
@@ -52,6 +54,8 @@ class CTR:
         return encrypted
 
     # Returns bitwise XOR of two hex strings
+	# INPUT:  2 hexadecimal strings of the same length
+	# OUTPUT: 1 hexadecimal string
     def xor(self, hex1, hex2):
         if len(hex1) != len(hex2):
             print "[*] Hexadecimal strings are not of the same length."

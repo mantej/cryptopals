@@ -88,6 +88,8 @@ Play that funky music".encode('hex')
 
 
 # Returns bitwise XOR of two hex strings
+# INPUT:  2 hexadecimal strings of the same length
+# OUTPUT: 1 hexadecimal string
 def xor(hex1, hex2):
     if len(hex1) != len(hex2):
         print "[*] Hexadecimal strings are not of the same length."
@@ -99,8 +101,8 @@ def xor(hex1, hex2):
     return xor_hex
 
 
-# Ciphertext is hex-encoded
-# Key is ASCII
+# INPUT:  Hex-encoded Ciphertext. ASCII Key.
+# OUTPUT: ASCII Plaintext
 def cbc_decrypt(ciphertext, key, IV="00000000000000000000000000000000", bSize=16, mode=AES.MODE_ECB):
     pad = (len(ciphertext) % (bSize*2)) / 2
     if pad != 0:

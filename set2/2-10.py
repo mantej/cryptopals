@@ -5,6 +5,8 @@ Implement CBC mode
 from Crypto.Cipher import AES
 
 # Returns bitwise XOR of two hex strings
+# INPUT:  2 hexadecimal strings of the same length
+# OUTPUT: 1 hexadecimal string
 def xor(hex1, hex2):
     if len(hex1) != len(hex2):
         print "[*] Hexadecimal strings are not of the same length."
@@ -15,8 +17,8 @@ def xor(hex1, hex2):
     xor_hex = "0"*(len(hex1) - len(xor_hex)) + xor_hex
     return xor_hex
 
-# Ciphertext is hex-encoded
-# Key is ASCII
+# INPUT:  Hex-encoded Ciphertext. ASCII Key.
+# OUTPUT: ASCII Plaintext
 def cbc_decrypt(ciphertext, key, mode, bSize=16, IV="00000000000000000000000000000000"):
     pad = (len(ciphertext) % (bSize*2)) / 2
     if pad != 0:
