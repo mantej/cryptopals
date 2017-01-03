@@ -100,9 +100,9 @@ def PKCS_validate(plaintext):
 
 # prepends "comment1=cooking%20MCs;userdata="
 # appends ";comment2=%20like%20a%20pound%20of%20bacon"
-# then, removes = and ;, and encrypts with AES CBC
-# user_input is ascii
-# key is ascii
+# then, removes = and ; from user input, and encrypts with CBC
+# INPUT:  ASCII input and ASCII key
+# OUTPUT: HEX-encdoed ciphertext
 def setup(user_input, key):
     user_input = user_input.translate(None, '=;')
     plaintext = ("comment1=cooking%20MCs;userdata=" + user_input + ";comment2=%20like%20a%20pound%20of%20bacon").encode('hex')
