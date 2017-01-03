@@ -5,14 +5,16 @@ CTR bitflipping
 from ctr import CTR
 import os
 
-
+# INPUT:  HEX-encoded ciphertext, integer position, character to inject
+# OUTPUT: HEX-encoded ciphertext with injection character inserted at position
 def bitflipping_attack(ciphertext, pos, injection):
     intermediate_byte = ord(ciphertext.decode('hex')[pos-1]) ^ ord("*")
     injected_byte = intermediate_byte ^ ord(injection)
     ciphertext = ciphertext[:(pos-1)*2] + chr(injected_byte).encode('hex') + ciphertext[pos*2:]
     return ciphertext
 
-
+# INPUT:  HEX-encoded ciphertext, ASCII match string, ASCII key
+# OUTPUT: TRUE if match string found in decrypted ciphertext
 def verify(ciphertext, match, key):
     ctr = CTR(key)
     return ctr.ctr_decrypt(ciphertext).find(match) != -1
@@ -28,6 +30,7 @@ def setup(user_input, key):
     ctr = CTR(key)
     ciphertext = ctr.ctr_encrypt(plaintext)
     return ciphertext
+
 
 key = os.urandom(16)
 user_input = "*admin*true"
