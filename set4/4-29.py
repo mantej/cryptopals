@@ -44,9 +44,9 @@ def glue_padding(message):
     return binascii.unhexlify('%x' % n)
 
 
-# FORGED_MESSAGE = glue padding to original message + append new message
-# INTERNAL_STATE = break original message digest into 32-bit registers
-# FORGED_DIGEST = new message + INTERNAL_STATE + LEN(FORGED_MESSAGE)
+# forged_message = "A"*keylen || original message || glue padding || new message
+# get_internal_state = breaks original message digest into [5] 32-bit registers
+# forged_digest = SHA-1 digest under secret key for our forged message
 def forge_message(message, message_digest, keylen, new_message):
     forged_message = glue_padding("A"*keylen + message) + new_message
     # remove key from our forged message (it's not the correct key anyways)
@@ -63,10 +63,12 @@ def forge_message(message, message_digest, keylen, new_message):
 # generate random key between 1 and 32 bytes (inclusive)
 random = randint(1,32)
 key = os.urandom(random)
+print
 print "[*] Actual key length is %s" % (len(key))
 
 # message & SHA1 message digest
-message = b'comment1=cooking%20MCs;userdata=foo;comment2=%20like%20a%20pound%20of%20bacon'
+#pmessage = b'comment1=cooking%20MCs;userdata=foo;comment2=%20like%20a%20pound%20of%20bacon'
+message = b'user=mantej;'
 message_digest = authSHA1(key, message)
 
 # taking stabs at the key length until we guess correctly & forge a MAC
@@ -75,6 +77,6 @@ for i in range(1, 33):
     if validate(m, d):
         print
         print "[*] Secret-Prefix MAC Generated!"
-        print "[*] Assumed Key Length is %s" % (i)
+        print "[*] My Guessed Key Length is %s" % (i)
         print "[*] Forged Message: %s" % (m)
         print "[*] Forged Digest under Secret Key: %s" % (d)

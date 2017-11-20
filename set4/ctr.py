@@ -12,15 +12,15 @@ class CTR:
     def ctr_decrypt(self, ciphertext):
         aes = AES.new(self.key, self.mode)
         decrypted = ""
-        ctr = self.nonce
-        keystream = aes.encrypt(pack("<Q",0)+pack("<Q", ctr))
+        nonce, ctr = self.nonce, 0
+        keystream = aes.encrypt(pack("<Q",nonce)+pack("<Q", ctr))
 
         # while there is more than '1 block' left (16 bytes = 32 hex characters)
         while len(ciphertext) >= 32:
             decrypted += self.xor(ciphertext[:32], keystream.encode('hex')).decode('hex')
             ciphertext = ciphertext[32:]
             ctr = ctr+1
-            keystream = aes.encrypt(pack("<Q",0)+pack("<Q", ctr))
+            keystream = aes.encrypt(pack("<Q",nonce)+pack("<Q", ctr))
 
         if len(ciphertext) != 0:
             leftover_length = len(ciphertext)/2
@@ -35,15 +35,15 @@ class CTR:
     def ctr_encrypt(self, plaintext):
         aes = AES.new(self.key, self.mode)
         encrypted = ""
-        ctr = self.nonce
-        keystream = aes.encrypt(pack("<Q",0)+pack("<Q", ctr))
+        nonce, ctr = self.nonce, 0
+        keystream = aes.encrypt(pack("<Q",nonce)+pack("<Q", ctr))
 
         # while there is more than '1 block' left (16 bytes = 32 hex characters)
         while len(plaintext) >= 32:
             encrypted += self.xor(plaintext[:32], keystream.encode('hex'))
             plaintext = plaintext[32:]
             ctr = ctr+1
-            keystream = aes.encrypt(pack("<Q",0)+pack("<Q", ctr))
+            keystream = aes.encrypt(pack("<Q",nonce)+pack("<Q", ctr))
 
         if len(plaintext) != 0:
             leftover_length = len(plaintext)/2

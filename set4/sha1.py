@@ -6,7 +6,7 @@ import sys
 
 # A slightly modified implementation of the following:
 # http://codereview.stackexchange.com/questions/37648/python-implementation-of-sha1
-# 
+#
 def sha1(message, h0=0x67452301, h1=0xEFCDAB89, h2=0x98BADCFE, h3=0x10325476, h4=0xC3D2E1F0, length=None):
     # length can optionally be injected for length-extension attacks
     if length == None:
