@@ -16,7 +16,7 @@ def timing_leak_attack():
             s = sig[:i]+h+sig[i+1:]
             start = time.time()
             for x in range(500):
-                r = requests.get('http://localhost:8080/test?file='+sys.argv[1]+'&signature='+s)
+                r = requests.get('http://localhost:8081/test?file='+sys.argv[1]+'&signature='+s)
             t = time.time()-start
             if t > longest_time:
                 longest_time = t
