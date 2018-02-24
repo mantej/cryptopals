@@ -22,7 +22,7 @@ func decode(encoded string) []byte{
 
 // INPUT:  two hex-encoded strings of the same length
 // OUTPUT: XOR of INPUT (hex-encoded)
-func xor( s1 string, s2 string) string{
+func xor(s1 string, s2 string) string{
   len := len(s1)/2
   buf := make([]byte, len)
   a := decode(s1)

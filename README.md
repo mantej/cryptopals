@@ -1,4 +1,4 @@
 # cryptopals challenges
 http://cryptopals.com
 
-As of November 2017: I'm redoing the challenges in Go
+As of February 2018, I'm working on Set 5
