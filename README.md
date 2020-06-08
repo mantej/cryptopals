@@ -1,3 +1,3 @@
-# cryptopals challenges
+# Cryptopals Challenges
 http://cryptopals.com
 
