@@ -1,14 +1,11 @@
-package main
+package set1
 
 import (
 	"bufio"
-	"encoding/hex"
-	"fmt"
 	"os"
-	"strconv"
-	"strings"
 )
 
+/*
 func main() {
 	lines := readFile("/set1/4.txt")
 
@@ -51,7 +48,7 @@ func main() {
 		}
 	}
 }
-
+*/
 // readFile reads a file line by line and returns a string array containing those lines
 func readFile(fn string) []string {
 	var encryptedstrings []string
@@ -75,53 +72,4 @@ func readFile(fn string) []string {
 	}
 
 	return encryptedstrings
-}
-
-// TODO: move the following reusable crypto utility functions to their own package
-
-// Score returns the ratio of characters in the english alphabet (and spaces) to total length of the string
-func Score(hexstring string) float64 {
-	bytes, err := hex.DecodeString(hexstring)
-	if err != nil {
-		fmt.Println("Unable to convert hex to byte")
-	}
-
-	length := float64(len(bytes))
-	var count int
-	var letter rune
-
-	for _, b := range bytes {
-		letter = rune(b)
-		if letter >= 'a' && letter <= 'z' || letter >= 'A' && letter <= 'Z' || letter == ' ' {
-			count = count + 1
-		}
-	}
-
-	return float64(count) / length
-}
-
-// extend a single-byte hex string to target string's length
-func extend(x, target string) string {
-	multiplier := len(target) / len(x)
-	return strings.Repeat(x, multiplier)
-}
-
-// xor against two hex strings and returns the result in hex format
-func xor(a, b string) string {
-	byteArray1, err := hex.DecodeString(a)
-	if err != nil {
-		fmt.Println("Unable to convert hex to byte")
-	}
-
-	byteArray2, err := hex.DecodeString(b)
-	if err != nil {
-		fmt.Println("Unable to convert hex to byte")
-	}
-
-	c := make([]byte, len(byteArray1))
-	for i := range byteArray1 {
-		c[i] = byteArray1[i] ^ byteArray2[i]
-	}
-
-	return hex.EncodeToString(c)
 }

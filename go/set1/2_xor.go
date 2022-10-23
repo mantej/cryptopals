@@ -1,10 +1,11 @@
-package main
+package set1
 
 import (
 	"encoding/hex"
 	"fmt"
 )
 
+/*
 func main() {
 	hex1 := "1c0111001f010100061a024b53535009181c"
 	hex2 := "686974207468652062756c6c277320657965"
@@ -17,6 +18,7 @@ func main() {
 	fmt.Println(xor(hex1, hex2))
 
 }
+*/
 
 func xor(a, b string) string {
 	byteArray1, err := hex.DecodeString(a)

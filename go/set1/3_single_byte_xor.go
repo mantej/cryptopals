@@ -1,12 +1,12 @@
-package main
+package set1
 
 import (
 	"encoding/hex"
 	"fmt"
-	"strconv"
 	"strings"
 )
 
+/*
 func main() {
 	target := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 	hex_string, result := "", ""
@@ -45,6 +45,7 @@ func main() {
 		}
 	}
 }
+*/
 
 // Score returns the ratio of characters in the english alphabet (and spaces) to total length of the string
 func Score(hexstring string) float64 {
@@ -71,24 +72,4 @@ func Score(hexstring string) float64 {
 func extend(x, target string) string {
 	multiplier := len(target) / len(x)
 	return strings.Repeat(x, multiplier)
-}
-
-// xor against two hex strings and returns the result in hex format
-func xor(a, b string) string {
-	byteArray1, err := hex.DecodeString(a)
-	if err != nil {
-		fmt.Println("Unable to convert hex to byte")
-	}
-
-	byteArray2, err := hex.DecodeString(b)
-	if err != nil {
-		fmt.Println("Unable to convert hex to byte")
-	}
-
-	c := make([]byte, len(byteArray1))
-	for i := range byteArray1 {
-		c[i] = byteArray1[i] ^ byteArray2[i]
-	}
-
-	return hex.EncodeToString(c)
 }
