@@ -1,6 +1,7 @@
 package set1
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -9,7 +10,10 @@ func TestChallenge1(t *testing.T) {
 	base64 := "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
 
 	result := Challenge1(hex)
+	
 	if result != base64 {
 		t.Fail()
+	} else {
+		fmt.Println("[*] Challenge 1 Passed")
 	}
 }
