@@ -3,11 +3,11 @@ package set1
 import (
 	"encoding/hex"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
-/*
-func main() {
+func Challenge3() string {
 	target := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 	hex_string, result := "", ""
 	var score float64
@@ -37,15 +37,15 @@ func main() {
 				fmt.Println("Unable to convert hex to byte")
 			}
 			// print something human readable instead of an array of bytes
-			fmt.Println(string(byteArray))
+			return string(byteArray)
 		}
 
 		if i == 255 {
 			break
 		}
 	}
+	return "null"
 }
-*/
 
 // Score returns the ratio of characters in the english alphabet (and spaces) to total length of the string
 func Score(hexstring string) float64 {
