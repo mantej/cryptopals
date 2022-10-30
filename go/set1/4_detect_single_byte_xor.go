@@ -2,12 +2,14 @@ package set1
 
 import (
 	"bufio"
+	"encoding/hex"
+	"fmt"
 	"os"
+	"strconv"
 )
 
-/*
-func main() {
-	lines := readFile("/set1/4.txt")
+func Challenge4() string {
+	lines := readFile("/4.txt")
 
 	// iterate over all encrypted hex strings
 	for i := 0; i < len(lines); i++ {
@@ -39,7 +41,8 @@ func main() {
 					fmt.Println("Unable to convert hex to byte")
 				}
 				// print human-readable instead of an array of bytes
-				fmt.Println(string(byteArray))
+				//fmt.Println(string(byteArray))
+				return string(byteArray)
 			}
 
 			if j == 255 {
@@ -47,8 +50,9 @@ func main() {
 			}
 		}
 	}
+	return ""
 }
-*/
+
 // readFile reads a file line by line and returns a string array containing those lines
 func readFile(fn string) []string {
 	var encryptedstrings []string
@@ -62,6 +66,8 @@ func readFile(fn string) []string {
 	// open file for reading
 	file, err := os.Open(wd + fn)
 	if err != nil {
+		fmt.Println(wd)
+		fmt.Println(fn)
 		panic("unable to open file for reading")
 	}
 
