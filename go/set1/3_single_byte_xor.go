@@ -68,8 +68,16 @@ func Score(hexstring string) float64 {
 	return float64(count) / length
 }
 
-// extend a single-byte hex string to target string's length
+// extend a hex string x to target string's length
 func extend(x, target string) string {
 	multiplier := len(target) / len(x)
-	return strings.Repeat(x, multiplier)
+	extended := strings.Repeat(x, multiplier)
+
+	// if len(x) doesn't divide len(target), need additional padding before returning
+	diff := len(target) - len(extended)
+	if diff == 0 {
+		return extended
+	} else {
+		return extended + x[:diff]
+	}
 }
