@@ -1,4 +1,4 @@
-package set1
+package cryptopals
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ func TestChallenge1(t *testing.T) {
 	base64 := "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
 
 	result := Challenge1(hex)
-	
+
 	if result != base64 {
 		t.Fail()
 	} else {
