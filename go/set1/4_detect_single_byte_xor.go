@@ -9,7 +9,7 @@ import (
 )
 
 func Challenge4() string {
-	lines := readFile("/4.txt")
+	lines := ReadFile("/4.txt")
 
 	// iterate over all encrypted hex strings
 	for i := 0; i < len(lines); i++ {
@@ -24,12 +24,12 @@ func Challenge4() string {
 			}
 
 			// extend single-byte to the length of the target hex_string string
-			hex_string = extend(hex_string, lines[i])
+			hex_string = Extend(hex_string, lines[i])
 
 			if len(hex_string) != len(lines[i]) {
 				panic("hex strings are not the same length!")
 			} else {
-				result = xor(hex_string, lines[i])
+				result = Xor(hex_string, lines[i])
 			}
 
 			score = Score(result)
@@ -54,7 +54,7 @@ func Challenge4() string {
 }
 
 // readFile reads a file line by line and returns a string array containing those lines
-func readFile(fn string) []string {
+func ReadFile(fn string) []string {
 	var encryptedstrings []string
 
 	// get working directory

@@ -13,11 +13,7 @@ func Challenge1(hexString string) string {
 		fmt.Println("Unable to convert hex to byte")
 	}
 
-	//fmt.Printf("Converting %s to base64 ...\n", hexString)
-
 	b64 := base64.StdEncoding.EncodeToString(byteArray)
-
-	//fmt.Printf("Base64 representation: %s\n", b64)
 
 	return b64
 }

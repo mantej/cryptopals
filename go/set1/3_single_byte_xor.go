@@ -19,13 +19,13 @@ func Challenge3() string {
 		}
 
 		// extend single-byte to the length of the target hex_string string
-		hex_string = extend(hex_string, target)
+		hex_string = Extend(hex_string, target)
 
 		// hex strings that we xor should be the same length
 		if len(hex_string) != len(target) {
 			panic("hex_string strings are not the same length!")
 		} else {
-			result = xor(hex_string, target)
+			result = Xor(hex_string, target)
 		}
 
 		score = Score(result)
@@ -69,7 +69,7 @@ func Score(hexstring string) float64 {
 }
 
 // extend a hex string x to target string's length
-func extend(x, target string) string {
+func Extend(x, target string) string {
 	multiplier := len(target) / len(x)
 	extended := strings.Repeat(x, multiplier)
 

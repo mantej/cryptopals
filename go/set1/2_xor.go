@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func xor(a, b string) string {
+func Xor(a, b string) string {
 	byteArray1, err := hex.DecodeString(a)
 	if err != nil {
 		fmt.Println("Unable to convert hex to byte")
