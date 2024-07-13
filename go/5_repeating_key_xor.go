@@ -12,7 +12,7 @@ func RepeatingKeyXor(input, key string) string {
 	key_hex = Extend(key_hex, input_hex)
 
 	// returns hex-encoded XOR of the two hex-encoded inputs
-	result := Xor(input_hex, key_hex)
+	result := HexXor(input_hex, key_hex)
 
 	return result
 }

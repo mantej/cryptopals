@@ -25,7 +25,7 @@ func Challenge3() string {
 		if len(hex_string) != len(target) {
 			panic("hex_string strings are not the same length!")
 		} else {
-			result = Xor(hex_string, target)
+			result = HexXor(hex_string, target)
 		}
 
 		score = Score(result)
