@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestHammingDistance(t *testing.T) {
+func TestChallenge6(t *testing.T) {
 	// this should throw an error
 	hammingDistance, err := HammingDistance("hello", "omg")
 	if err == nil {

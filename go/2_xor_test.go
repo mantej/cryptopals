@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestXor(t *testing.T) {
+func TestChallenge2(t *testing.T) {
 	hex1 := "1c0111001f010100061a024b53535009181c"
 	hex2 := "686974207468652062756c6c277320657965"
 
