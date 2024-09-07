@@ -1,7 +1,6 @@
 package cryptopals
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 )
@@ -12,7 +11,5 @@ func TestChallenge4(t *testing.T) {
 
 	if strings.TrimSuffix(result, "\n") != expected {
 		t.Fail()
-	} else {
-		fmt.Println("[*] Challenge 4 Passed")
 	}
 }

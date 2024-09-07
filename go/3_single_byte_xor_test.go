@@ -1,7 +1,6 @@
 package cryptopals
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -11,7 +10,5 @@ func TestChallenge3(t *testing.T) {
 
 	if result != expected {
 		t.Fail()
-	} else {
-		fmt.Println("[*] Challenge 3 Passed")
 	}
 }

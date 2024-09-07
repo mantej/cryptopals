@@ -1,7 +1,6 @@
 package cryptopals
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -14,7 +13,5 @@ func TestXor(t *testing.T) {
 
 	if result != expectedResult {
 		t.Fail()
-	} else {
-		fmt.Println("[*] Challenge 2 Passed")
 	}
 }

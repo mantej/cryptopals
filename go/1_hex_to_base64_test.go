@@ -1,7 +1,6 @@
 package cryptopals
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -13,7 +12,5 @@ func TestChallenge1(t *testing.T) {
 
 	if result != base64 {
 		t.Fail()
-	} else {
-		fmt.Println("[*] Challenge 1 Passed")
 	}
 }
