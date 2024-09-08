@@ -3,48 +3,41 @@ package cryptopals
 import (
 	"encoding/hex"
 	"fmt"
-	"strconv"
 	"strings"
 )
 
-func Challenge3() string {
-	target := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-	hex_string, result := "", ""
-	var score float64
+func Challenge3() (string, byte) {
+	target, _ := hex.DecodeString("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
+	return BreakSingleByteXor(target)
+}
 
-	for i := 0; ; i++ {
-		hex_string = strconv.FormatInt(int64(i), 16)
-		if len(hex_string) == 1 {
-			hex_string = "0" + hex_string
-		}
+func SingleByteXor(key byte, data []byte) []byte {
+	output := make([]byte, len(data))
+	for i := 0; i < len(data); i++ {
+		output[i] = data[i] ^ key
+	}
+	return output
+}
 
-		// extend single-byte to the length of the target hex_string string
-		hex_string = Extend(hex_string, target)
+// BreakSingleByteXor returns the best plaintext candidate and the corresponding best byte
+func BreakSingleByteXor(data []byte) (string, byte) {
+	var bestScore float64
+	var bestPlaintext []byte
+	var bestByte byte
 
-		// hex strings that we xor should be the same length
-		if len(hex_string) != len(target) {
-			panic("hex_string strings are not the same length!")
-		} else {
-			result = HexXor(hex_string, target)
-		}
+	for i := 0; i <= 255; i++ {
+		key := byte(i)
+		plaintext := SingleByteXor(key, data)
 
-		score = Score(result)
-
-		// high score = english
-		if score > 0.85 {
-			byteArray, err := hex.DecodeString(result)
-			if err != nil {
-				fmt.Println("Unable to convert hex to byte")
-			}
-			// print something human readable instead of an array of bytes
-			return string(byteArray)
-		}
-
-		if i == 255 {
-			break
+		score := Score(hex.EncodeToString(plaintext))
+		if score > bestScore {
+			bestScore = score
+			bestPlaintext = plaintext
+			bestByte = key
 		}
 	}
-	return "null"
+
+	return string(bestPlaintext), bestByte
 }
 
 // Score returns the ratio of characters in the english alphabet (and spaces) to total length of the string
