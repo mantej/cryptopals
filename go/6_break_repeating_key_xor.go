@@ -1,20 +1,41 @@
 package cryptopals
 
 import (
+	"encoding/base64"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
 
+func Xor(key []byte, data []byte) []byte {
+	extendedKey := make([]byte, len(data))
+
+	for i := range data {
+		extendedKey[i] = key[i%len(key)]
+	}
+
+	output := make([]byte, len(data))
+	for i := range data {
+		output[i] = data[i] ^ extendedKey[i]
+	}
+
+	return output
+}
+
 // TransposeBlocks will return an array of blocks, with the first block being
 // the all the first bytes of the keySize length blocks, and so on
-func TransposeBlocks(data []byte, keySize int) []string {
-
-	return []string{
-		string([]byte{0}),
-		string([]byte{0}),
+func TransposeBlocks(data []byte, keySize int) [][]byte {
+	var transposed [][]byte
+	for i := 0; i < keySize; i++ {
+		transposed = append(transposed, []byte{})
 	}
+
+	for i := 0; i < len(data); i++ {
+		transposed[i%keySize] = append(transposed[i%keySize], data[i])
+	}
+
+	return transposed
 }
 
 func GetKeySize(data []byte) int {
@@ -75,7 +96,7 @@ func toByte(s1 string) []byte {
 	return []byte(s1)
 }
 
-// readFile returns the []byte representation of a (base-64 encoded) file after stripping newlines
+// readFile returns the []byte representation of a (base-64 encoded) file after stripping newlines and decoding
 func readFile(fileName string) []byte {
 	wd, err := os.Getwd()
 	if err != nil {
@@ -83,13 +104,20 @@ func readFile(fileName string) []byte {
 	}
 
 	data, err := os.ReadFile(wd + fileName)
-	dataStripNewline := strings.ReplaceAll(string(data), "\n", "")
-
 	if err != nil {
 		fmt.Println(wd)
 		fmt.Println(fileName)
 		panic("unable to open file for reading")
 	}
 
-	return []byte(dataStripNewline)
+	// Strip newlines from the file content
+	dataStripNewline := strings.ReplaceAll(string(data), "\n", "")
+
+	// Decode the base64 content
+	decodedData, err := base64.StdEncoding.DecodeString(dataStripNewline)
+	if err != nil {
+		panic("unable to decode base64 content")
+	}
+
+	return decodedData
 }
