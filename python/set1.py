@@ -10,7 +10,7 @@ def challenge1():
     else:
         print("[*] challenge 1 passed")
 
-def xor(hex1, hex2):
+def xor(hex1: str, hex2: str) -> str:
     """
     Takes two hex strings and returns their XOR combination
 
@@ -41,8 +41,50 @@ def challenge2():
     else:
         print("[*] challenge 2 passed")
 
+def score(input: bytes) -> float:
+    """
+    Takes a string and returns a score based on how many English language characters are used
+
+    Args:
+        input (bytes): string to check against the English alphabet
+
+    Returns:
+        float: Score between 0.0 and 1.0
+    """
+    length = len(input)
+    score = 0
+    
+    for char in input:
+        # uppercase
+        if 65 <= char <= 90:
+            score += 1
+        # lowercase 
+        elif 97 <= char <= 122:
+            score += 1
+        # space
+        elif char == 32:
+            score += 1
+            
+    return float(score) / length
+
+
+def challenge3():
+    hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+    expectedResult = b"Cooking MC's like a pound of bacon"
+
+    for i in range(256):
+        key = bytes([i] * (len(hex) // 2))
+        key_hex = key.hex()
+
+        result = xor(hex, key_hex)
+        if score(result) > 0.9:
+            if result != expectedResult:
+                raise ValueError(f"Challenge 3 failed: got {result}, expected {expectedResult}")
+            else:
+                print("[*] challenge 3 passed")
 
 
 if __name__ == "__main__":
     challenge1()
     challenge2()
+    challenge3()
