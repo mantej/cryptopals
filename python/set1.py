@@ -10,6 +10,7 @@ def challenge1():
     else:
         print("[*] challenge 1 passed")
 
+
 def xor(hex1: str, hex2: str) -> str:
     """
     Takes two hex strings and returns their XOR combination
@@ -30,6 +31,7 @@ def xor(hex1: str, hex2: str) -> str:
     
     return xored
 
+
 def challenge2():
     hex1 = "1c0111001f010100061a024b53535009181c"
     hex2 = "686974207468652062756c6c277320657965"
@@ -40,6 +42,7 @@ def challenge2():
         raise ValueError(f"Challenge 2 failed: got {result}, expected {expectedResult}")
     else:
         print("[*] challenge 2 passed")
+
 
 def score(input: bytes) -> float:
     """
@@ -84,7 +87,26 @@ def challenge3():
                 print("[*] challenge 3 passed")
 
 
+def challenge4():
+    expectedResult = b"Now that the party is jumping\n"
+    with open("files/1-4.txt") as file:
+        files = file.readlines()
+    files = [f.strip("\n") for f in files]
+
+    for candidate_hex in files:
+        for i in range(256):
+            key = bytes([i] * (len(candidate_hex) // 2))
+            key_hex = key.hex()
+
+            result = xor(candidate_hex, key_hex)
+            if score(result) > 0.9:
+                if result != expectedResult:
+                    raise ValueError(f"Challenge 4 failed: got {result}, expected {expectedResult}")
+                else:
+                    print("[*] challenge 4 passed")
+
 if __name__ == "__main__":
     challenge1()
     challenge2()
     challenge3()
+    challenge4()
