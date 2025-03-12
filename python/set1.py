@@ -106,20 +106,37 @@ def challenge4():
                     print("[*] challenge 4 passed")
 
 
+def repeating_key_xor(key: str, text: str) -> str:
+    """
+    Takes a key and text and returns their XOR combination
+
+    Args:
+        key (str): ASCII key for repeating key XOR
+        text (str): ASCII text to be encrypted or decrypted
+
+    Returns:
+        str: Bytes representation of the XOR combination of key and text
+    """
+    key_hex = bytes(key, "ascii").hex()
+    text_hex = bytes(text, "ascii").hex()
+    key_repeating = (key_hex * (len(text_hex) // len(key_hex) + 1))[:len(text_hex)]
+
+    return xor(key_repeating, text_hex)
+
+
 def challenge5():
-    stanza = bytes("Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal", "ascii").hex()
+    key = "ICE"
+    stanza = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
     
     expectedResult = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"
     
-    key = bytes("ICE", "ascii").hex()
-    key = (key * (len(stanza) // len(key) + 1))[:len(stanza)]
-    result = xor(stanza, key)
+    result = repeating_key_xor(key, stanza)
 
     if result.hex() != expectedResult:
         raise ValueError(f"Challenge 5 failed: got {result.hex()}, expected {expectedResult}")
     else:
         print("[*] challenge 5 passed")
-
+    
 
 if __name__ == "__main__":
     challenge1()
