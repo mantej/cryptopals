@@ -136,7 +136,35 @@ def challenge5():
         raise ValueError(f"Challenge 5 failed: got {result.hex()}, expected {expectedResult}")
     else:
         print("[*] challenge 5 passed")
+
+
+def hamming_distance(str1: str, str2: str) -> int:
+    """
+    Returns hamming distance between two strings
+
+    Args:
+        str1 (str): first string
+        str2 (str): second string
     
+    Returns:
+        int: hamming disntace between str1 and str2
+    """
+    str1_hex = bytes(str1, "ascii").hex()
+    str2_hex = bytes(str2, "ascii").hex()
+    result = xor(str1_hex, str2_hex)
+    return bin(int.from_bytes(result, byteorder='big')).count('1')
+    
+
+def challenge6():
+    with open("files/1-6.txt") as file:
+        lines = file.readlines()
+    lines = [l.strip("\n") for l in lines]
+    ciphertext = ''.join(lines)
+    ciphertext = base64.b64decode(ciphertext).decode('ascii')
+    
+    keysize = None
+        
+
 
 if __name__ == "__main__":
     challenge1()
@@ -144,3 +172,4 @@ if __name__ == "__main__":
     challenge3()
     challenge4()
     challenge5()
+    challenge6()
