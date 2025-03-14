@@ -162,7 +162,27 @@ def challenge6():
     ciphertext = ''.join(lines)
     ciphertext = base64.b64decode(ciphertext).decode('ascii')
     
-    keysize = None
+    keysize, shortest_distance = None, 100.0
+    for ks in range(15,40):
+        # take four keysize chunks
+        chunk1 = ciphertext[0:ks]
+        chunk2 = ciphertext[ks:ks*2]
+        chunk3 = ciphertext[ks*2:ks*3] 
+        chunk4 = ciphertext[ks*3:ks*4]
+
+        # calculate normalized hamming distances
+        dist1 = hamming_distance(chunk1, chunk2) / ks
+        dist2 = hamming_distance(chunk3, chunk4) / ks
+        
+        # average the two distances
+        avg_dist = (dist1 + dist2) / 2
+
+        if avg_dist < shortest_distance:
+            shortest_distance = avg_dist
+            keysize = ks
+    
+    print(keysize)
+
         
 
 
