@@ -217,7 +217,7 @@ def challenge7():
     ciphertext = base64.b64decode(ciphertext)
     cipher = AES.new(key.encode('ascii'), AES.MODE_ECB)
     plaintext = cipher.decrypt(ciphertext)
-    
+
     # remove PKCS#7 padding by checking last byte value and removing that many bytes
     padding_length = plaintext[-1]
     plaintext = plaintext[:-padding_length]
@@ -226,8 +226,47 @@ def challenge7():
         raise ValueError(f"Challenge 7 failed: got {plaintext}, expected {EXPECTED_RESULT}")
     else:
         print("[*] challenge 7 passed")
-                         
 
+
+def detect_ecb(ciphertext: str, blockSize: int = 16) -> bool:
+    """
+    Detects if a hex-encoded ciphertext was encrypted using ECB mode by checking for duplicate blocks
+    
+    Args:
+        ciphertext (str): Hex-encoded ciphertext
+        blockSize (int): Size of blocks in bytes (default 16)
+        
+    Returns:
+        bool: True if ECB mode detected, False otherwise
+    """
+    # convert hex to bytes
+    raw = bytes.fromhex(ciphertext.strip())
+    
+    blocks = []
+    for i in range(0, len(raw), blockSize):
+        blocks.append(raw[i:i+blockSize])
+        
+    # check for duplicates by comparing length of blocks to length of unique blocks
+    return len(blocks) != len(set(blocks))
+
+
+def challenge8():
+    expectedResult = "d880619740a8a19b7840a8a31c810a3d08649af70dc06f4fd5d2d69c744cd283e2dd052f6b641dbf9d11b0348542bb5708649af70dc06f4fd5d2d69c744cd2839475c9dfdbc1d46597949d9c7e82bf5a08649af70dc06f4fd5d2d69c744cd28397a93eab8d6aecd566489154789a6b0308649af70dc06f4fd5d2d69c744cd283d403180c98c8f6db1f2a3f9c4040deb0ab51b29933f2c123c58386b06fba186a"
+    
+    ecb_block = None
+    with open("files/1-8.txt") as file:
+        lines = file.readlines()
+    lines = [l.strip("\n") for l in lines]
+    for ciphertext in lines:
+        if detect_ecb(ciphertext):
+            ecb_block = ciphertext
+    
+    if ecb_block != expectedResult:
+        raise ValueError(f"Challenge 8 failed: got {ecb_block}, expected {expectedResult}")
+    else:
+        print("[*] challenge 8 passed")
+
+    
 
 if __name__ == "__main__":
     challenge1()
@@ -237,3 +276,4 @@ if __name__ == "__main__":
     challenge5()
     challenge6()
     challenge7()
+    challenge8()
