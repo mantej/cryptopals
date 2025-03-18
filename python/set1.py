@@ -51,7 +51,7 @@ def score(input: bytes) -> float:
     Takes a string and returns a score based on how many English language characters are used
 
     Args:
-        input (bytes): string to check against the English alphabet
+        input (bytes): String to check against the English alphabet
 
     Returns:
         float: Score between 0.0 and 1.0
@@ -145,11 +145,11 @@ def hamming_distance(str1: str, str2: str) -> int:
     Returns hamming distance between two strings
 
     Args:
-        str1 (str): first string
-        str2 (str): second string
+        str1 (str): First string
+        str2 (str): Second string
     
     Returns:
-        int: hamming disntace between str1 and str2
+        int: Hamming disntace between str1 and str2
     """
     str1_hex = bytes(str1, "ascii").hex()
     str2_hex = bytes(str2, "ascii").hex()
@@ -266,7 +266,6 @@ def challenge8():
     else:
         print("[*] challenge 8 passed")
 
-    
 
 if __name__ == "__main__":
     challenge1()
