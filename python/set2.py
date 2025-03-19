@@ -1,3 +1,6 @@
+import base64
+
+from Crypto.Cipher import AES
 
 def pkcs7(plaintext: str, length: int) -> bytes:
     """
@@ -34,5 +37,35 @@ def challenge9():
         print("[*] challenge 9 passed")
 
 
+def xor(bytes1: bytes, bytes2: bytes) -> bytes:
+    """
+    Takes two bytes objects and returns their XOR combination
+
+    Args:
+        bytes1 (bytes): First bytes object
+        bytes2 (bytes): Second bytes object
+
+    Returns:
+        bytes: XOR combination of bytes1 and bytes2
+    """        
+    return bytes(a ^ b for a,b in zip(bytes1, bytes2))
+
+
+def cbc_decrypt(ciphertext: bytes, key: bytes, blockSize: int = 16, IV: bytes = b"00000000000000000000000000000000"):
+    blocks = []
+
+
+def challenge10():
+    with open("files/2-10.txt") as file:
+        lines = file.readlines()
+    lines = [l.strip("\n") for l in lines]
+    ciphertext = ''.join(lines)
+    ciphertext = base64.b64decode(ciphertext)
+
+    key = b"YELLOW SUBMARINE"
+    plaintext = cbc_decrypt(ciphertext, key)
+    print(plaintext)
+
 if __name__ == "__main__":
     challenge9()
+    challenge10()
