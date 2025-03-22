@@ -51,8 +51,21 @@ def xor(bytes1: bytes, bytes2: bytes) -> bytes:
     return bytes(a ^ b for a,b in zip(bytes1, bytes2))
 
 
-def cbc_decrypt(ciphertext: bytes, key: bytes, blockSize: int = 16, IV: bytes = b"00000000000000000000000000000000"):
+def cbc_decrypt(ciphertext: bytes, key: bytes, blockSize: int = 16, IV: bytes = b"0000000000000000"):
     blocks = []
+    blocks = [IV]
+    for i in range(0, len(ciphertext), blockSize):
+        blocks.append(ciphertext[i:i+blockSize])
+    
+    aes = AES.new(key, AES.MODE_ECB)
+
+    decrypted = b""
+    for i, block in enumerate(blocks[1:]):
+        decrypted_block = aes.decrypt(block)
+        decrypted_block = xor(decrypted_block, blocks[i])
+        decrypted += decrypted_block
+    
+    return decrypted
 
 
 def challenge10():
@@ -64,7 +77,12 @@ def challenge10():
 
     key = b"YELLOW SUBMARINE"
     plaintext = cbc_decrypt(ciphertext, key)
-    print(plaintext)
+    
+    if "Play that funky music".encode() not in plaintext:
+        raise ValueError(f"Challenge 10 failed: got {plaintext}")
+    else:
+        print("[*] challenge 10 passed")
+
 
 if __name__ == "__main__":
     challenge9()
