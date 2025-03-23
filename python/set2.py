@@ -4,7 +4,7 @@ from Crypto.Cipher import AES
 
 def pkcs7(plaintext: str, length: int) -> bytes:
     """
-    Implements PKCS#7 padding by appending bytes to reach desired block length.
+    Implements PKCS#7 padding by appending bytes to reach desired block length
     
     Args:
         plaintext (str): The text to pad
@@ -51,7 +51,19 @@ def xor(bytes1: bytes, bytes2: bytes) -> bytes:
     return bytes(a ^ b for a,b in zip(bytes1, bytes2))
 
 
-def cbc_decrypt(ciphertext: bytes, key: bytes, blockSize: int = 16, IV: bytes = b"0000000000000000"):
+def cbc_decrypt(ciphertext: bytes, key: bytes, blockSize: int = 16, IV: bytes = b"0000000000000000") -> bytes:
+    """
+    Decrypts ciphertext using AES in CBC mode
+    
+    Args:
+        ciphertext (bytes): The encrypted data to decrypt
+        key (bytes): The AES key used for decryption
+        blockSize (int, optional): Block size in bytes (default 16)
+        IV (bytes, optional): Initialization vector (default b"0000000000000000")
+        
+    Returns:
+        bytes: The decrypted plaintext
+    """
     blocks = []
     blocks = [IV]
     for i in range(0, len(ciphertext), blockSize):
