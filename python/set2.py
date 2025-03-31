@@ -1,4 +1,9 @@
+
 import base64
+import os
+import random
+
+from set1 import detect_ecb
 
 from Crypto.Cipher import AES
 
@@ -130,6 +135,35 @@ def challenge10():
         print("[*] challenge 10 passed")
 
 
+def encryption_oracle(plaintext: bytes) -> tuple[bytes, str]:
+    """
+    Encrypts plaintext with random padding in either ECB or CBC mode
+    
+    Args:
+        plaintext (bytes): The data to encrypt
+        
+    Returns:
+        bytes: The encrypted ciphertext
+    """
+    prefix = os.urandom(random.randint(5, 10))
+    suffix = os.urandom(random.randint(5, 10))
+    
+    padded_plaintext = prefix + plaintext + suffix
+    
+    key = os.urandom(16)
+    
+    if random.randint(0, 1):
+        aes = AES.new(key, AES.MODE_ECB)
+        padding = 16 - (len(padded_plaintext) % 16)
+        if padding < 16:
+            padded_plaintext += bytes([padding]) * padding
+        return aes.encrypt(padded_plaintext), "ecb"
+    else:
+        # CBC mode with random IV
+        iv = os.urandom(16)
+        return cbc_encrypt(padded_plaintext, key, IV=iv), "cbc"
+
+
 def challenge11():
     with open("files/2-10.txt") as file:
         lines = file.readlines()
@@ -137,6 +171,22 @@ def challenge11():
     ciphertext = ''.join(lines)
     ciphertext = base64.b64decode(ciphertext)
 
+    key = b"YELLOW SUBMARINE"
+    plaintext = cbc_decrypt(ciphertext, key)
+
+    for _ in range(16):
+        ciphertext, mode = encryption_oracle(plaintext)
+
+        oracle_result_ecb = detect_ecb(ciphertext.hex())
+
+        if oracle_result_ecb:
+            if mode == "cbc":
+                raise ValueError(f"Challenge 11 failed: got {mode}, expected ecb")
+        else:
+            if mode == "ecb":
+                raise ValueError(f"Challenge 11 failed: got {mode}, expected cbc")
+            
+    print("[*] challenge 11 passed")
 
 if __name__ == "__main__":
     challenge9()
