@@ -80,6 +80,40 @@ def cbc_decrypt(ciphertext: bytes, key: bytes, blockSize: int = 16, IV: bytes = 
     return decrypted
 
 
+def cbc_encrypt(plaintext: bytes, key: bytes, blockSize: int = 16, IV: bytes = b"0000000000000000") -> bytes:
+    """
+    Encrypts plaintext using AES in CBC mode
+    
+    Args:
+        plaintext (bytes): The data to encrypt
+        key (bytes): The AES key used for encryption
+        blockSize (int, optional): Block size in bytes (default 16)
+        IV (bytes, optional): Initialization vector (default b"0000000000000000")
+        
+    Returns:
+        bytes: The encrypted ciphertext
+    """
+    padding = blockSize - (len(plaintext) % blockSize)
+    if padding < blockSize:
+        plaintext += bytes([padding]) * padding
+    
+    blocks = []
+    for i in range(0, len(plaintext), blockSize):
+        blocks.append(plaintext[i:i+blockSize])
+    
+    aes = AES.new(key, AES.MODE_ECB)
+    
+    encrypted = b""
+    prev_block = IV
+    for block in blocks:
+        xored_block = xor(block, prev_block)
+        encrypted_block = aes.encrypt(xored_block)
+        encrypted += encrypted_block
+        prev_block = encrypted_block
+        
+    return encrypted
+
+
 def challenge10():
     with open("files/2-10.txt") as file:
         lines = file.readlines()
@@ -96,6 +130,15 @@ def challenge10():
         print("[*] challenge 10 passed")
 
 
+def challenge11():
+    with open("files/2-10.txt") as file:
+        lines = file.readlines()
+    lines = [l.strip("\n") for l in lines]
+    ciphertext = ''.join(lines)
+    ciphertext = base64.b64decode(ciphertext)
+
+
 if __name__ == "__main__":
     challenge9()
     challenge10()
+    challenge11()
