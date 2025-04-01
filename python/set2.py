@@ -1,4 +1,3 @@
-
 import base64
 import os
 import random
@@ -187,6 +186,7 @@ def challenge11():
                 raise ValueError(f"Challenge 11 failed: got {mode}, expected cbc")
             
     print("[*] challenge 11 passed")
+
 
 if __name__ == "__main__":
     challenge9()
